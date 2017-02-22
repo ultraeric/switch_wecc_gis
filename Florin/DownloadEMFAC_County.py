@@ -6,10 +6,15 @@ import os
 
 
 # https://www.arb.ca.gov/emfac/2014/combobox.php?_id=geo_level&_name=geo_level&_value=county
-counties = [{"Alameda":"Alameda"},{"Alpine":"Alpine"},{"Amador":"Amador"},{"Butte":"Butte"},{"Calaveras":"Calaveras"},{"Colusa ":"Colusa "},{"Contra Costa":"Contra Costa"},{"Del Norte":"Del Norte"},{"El Dorado":"El Dorado"},{"Fresno":"Fresno"},{"Glenn":"Glenn"},{"Humboldt":"Humboldt"},{"Imperial":"Imperial"},{"Inyo":"Inyo"},{"Kern":"Kern"},{"Kings":"Kings"},{"Lake":"Lake"},{"Lassen":"Lassen"},{"Los Angeles":"Los Angeles"},{"Madera":"Madera"},{"Marin":"Marin"},{"Mariposa":"Mariposa"},{"Mendocino":"Mendocino"},{"Merced":"Merced"},{"Modoc":"Modoc"},{"Mono":"Mono"},{"Monterey":"Monterey"},{"Napa":"Napa"},{"Nevada":"Nevada"},{"Orange":"Orange"},{"Placer":"Placer"},{"Plumas":"Plumas"},{"Riverside":"Riverside"},{"Sacramento":"Sacramento"},{"San Benito":"San Benito"},{"San Bernardino":"San Bernardino"},{"San Diego":"San Diego"},{"San Francisco":"San Francisco"},{"San Joaquin":"San Joaquin"},{"San Luis Obispo":"San Luis Obispo"},{"San Mateo":"San Mateo"},{"Santa Barbara":"Santa Barbara"},{"Santa Clara":"Santa Clara"},{"Santa Cruz":"Santa Cruz"},{"Shasta":"Shasta"},{"Sierra":"Sierra"},{"Siskiyou":"Siskiyou"},{"Solano":"Solano"},{"Sonoma":"Sonoma"},{"Stanislaus":"Stanislaus"},{"Sutter":"Sutter"},{"Tehama":"Tehama"},{"Trinity":"Trinity"},{"Tulare":"Tulare"},{"Tuolumne":"Tuolumne"},{"Ventura":"Ventura"},{"Yolo":"Yolo"},{"Yuba":"Yuba"}]
+counties = [{"Alameda":"Alameda"},{"Alpine":"Alpine"},{"Amador":"Amador"},{"Butte":"Butte"},{"Calaveras":"Calaveras"},{"Colusa":"Colusa"},{"Contra Costa":"Contra Costa"},{"Del Norte":"Del Norte"},{"El Dorado":"El Dorado"},{"Fresno":"Fresno"},{"Glenn":"Glenn"},{"Humboldt":"Humboldt"},{"Imperial":"Imperial"},{"Inyo":"Inyo"},{"Kern":"Kern"},{"Kings":"Kings"},{"Lake":"Lake"},{"Lassen":"Lassen"},{"Los Angeles":"Los Angeles"},{"Madera":"Madera"},{"Marin":"Marin"},{"Mariposa":"Mariposa"},{"Mendocino":"Mendocino"},{"Merced":"Merced"},{"Modoc":"Modoc"},{"Mono":"Mono"},{"Monterey":"Monterey"},{"Napa":"Napa"},{"Nevada":"Nevada"},{"Orange":"Orange"},{"Placer":"Placer"},{"Plumas":"Plumas"},{"Riverside":"Riverside"},{"Sacramento":"Sacramento"},{"San Benito":"San Benito"},{"San Bernardino":"San Bernardino"},{"San Diego":"San Diego"},{"San Francisco":"San Francisco"},{"San Joaquin":"San Joaquin"},{"San Luis Obispo":"San Luis Obispo"},{"San Mateo":"San Mateo"},{"Santa Barbara":"Santa Barbara"},{"Santa Clara":"Santa Clara"},{"Santa Cruz":"Santa Cruz"},{"Shasta":"Shasta"},{"Sierra":"Sierra"},{"Siskiyou":"Siskiyou"},{"Solano":"Solano"},{"Sonoma":"Sonoma"},{"Stanislaus":"Stanislaus"},{"Sutter":"Sutter"},{"Tehama":"Tehama"},{"Trinity":"Trinity"},{"Tulare":"Tulare"},{"Tuolumne":"Tuolumne"},{"Ventura":"Ventura"},{"Yolo":"Yolo"},{"Yuba":"Yuba"}]
+
+year = '2015'
 
 if not os.path.exists('EMFAC2014_County/'):
     os.makedirs('EMFAC2014_County/')
+
+if not os.path.exists('EMFAC2014_County/' + year):
+    os.makedirs('EMFAC2014_County/' + year)
 
 for county in counties:
     br = Browser()
@@ -29,7 +34,7 @@ for county in counties:
     # now set the region to the injected county
     br.form['region'] = [county.keys()[0]]
 
-    br.form['cal_year[]'] = ['2016']
+    br.form['cal_year[]'] = [year]
     br.form['season'] = ['annual']
     br.form['veh_cat_type'] = ['emfac2011']
 
@@ -55,6 +60,7 @@ for county in counties:
             br.form['season'][0] + '_' +\
             br.form['veh_cat_type'][0] + '_' +\
             br.form['veh_cat_option'][0]
+    # print filename
 
     response2 = br.submit()
     df = pd.read_csv(response2, skiprows=7) # skip the header, which looks like:
@@ -65,6 +71,6 @@ for county in counties:
             # Season: Annual
             # Vehicle Classification: EMFAC2011 Categories
             # Units: miles/day for VMT, trips/day for Trips, tons/day for Emissions, 1000 gallons/day for Fuel Consumption
-    # print df.head()
+    print df.head()
     # print df.shape
-    df = df.to_csv('EMFAC2014_County/' + filename + '.csv', index=False)
+    # df = df.to_csv('EMFAC2014_County/' + year + '/' + filename + '.csv', index=False)
