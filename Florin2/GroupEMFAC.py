@@ -15,7 +15,7 @@ with open(newfile, 'a') as csvfile:
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
     writer.writeheader()
 
-    # Iterate through EMFACE Counties
+    # Iterate through EMFAC Counties
     for filename in os.listdir(directory):
         with open(directory + filename, 'rb') as csvfile:
             reader = csv.DictReader(csvfile)
